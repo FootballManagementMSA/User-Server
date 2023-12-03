@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:17
 ARG JAR_FILE=build/libs/*.jar
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Seoul
