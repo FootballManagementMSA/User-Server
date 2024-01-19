@@ -37,6 +37,10 @@ dependencies {
 
     // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //junit
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+
 }
 
 dependencyManagement {
