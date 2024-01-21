@@ -1,15 +1,13 @@
 package sejong.user.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @Entity
@@ -18,7 +16,8 @@ public class UserTeam {
     @GeneratedValue
     private Long id;
     private Long teamId;
-    private Long userId;
+    private String userId;
     private Boolean accept;
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

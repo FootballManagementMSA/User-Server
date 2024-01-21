@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class SizeOfUsersInTeamDto {
+public class SizeUserTeamDto {
     private Integer size;
 
-    public static SizeOfUsersInTeamDto of(int size) {
-        return SizeOfUsersInTeamDto.builder()
+    public static SizeUserTeamDto of(int size) {
+        return SizeUserTeamDto.builder()
                 .size(size)
                 .build();
     }

@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class SizeOfUsersInTeamResponse {
+public class SizeUserTeamResponse {
     private Integer size;
-    public static SizeOfUsersInTeamResponse of(Integer num){
-        return SizeOfUsersInTeamResponse.builder()
+    public static SizeUserTeamResponse of(Integer num){
+        return SizeUserTeamResponse.builder()
                 .size(num)
                 .build();
     }

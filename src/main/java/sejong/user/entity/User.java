@@ -1,28 +1,28 @@
 package sejong.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Data
+@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorColumn
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Builder
-public class Player {
+@Entity(name = "user_tb")
+public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(
             name = "uuid2",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "player_id", updatable = false, nullable = false)
+    @Column(name = "user_id", updatable = false, nullable = false)
     private String id;
+    private String studentId;
+    private String grade;
+    private String state;
+    private String major;
+    private String name;
 
     private String position;
     private String foot;

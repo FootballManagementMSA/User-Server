@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import sejong.user.entity.UserTeam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
