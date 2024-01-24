@@ -46,6 +46,8 @@ dependencies {
     //junit
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
 
+    //postgresql
+    implementation 'org.postgresql:postgresql'
 }
 
 dependencyManagement {
