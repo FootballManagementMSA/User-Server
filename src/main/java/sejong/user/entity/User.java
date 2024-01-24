@@ -11,13 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity(name = "user_tb")
 public class User {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(
-            name = "uuid2",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "user_id", updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String studentId;
     private String grade;
     private String state;
