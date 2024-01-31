@@ -56,6 +56,12 @@ dependencies {
 
     //JsonObject
     implementation 'org.json:json:20211205'
+
+    // modelmapper 라이브러리
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
+
+    // Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 dependencyManagement {
