@@ -1,8 +1,8 @@
 package sejong.user.service.constant;
 
 public class UserAuthServiceConstant {
-    public static final String RESULT = "RESULT";
-    public static final String CODE = "CODE";
+    public static final String RESULT = "result";
+    public static final String CODE = "code";
     public static final String SEJONG_AUTH_URL = "https://auth.imsejong.com/auth?method=ClassicSession";
     public static final String ID = "id";
     public static final String PASSWORD = "pw";
