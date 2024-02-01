@@ -14,8 +14,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String studentId;
+    private String password;
     private String grade;
-    private String state;
+    private String status;
     private String major;
     private String name;
 
