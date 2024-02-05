@@ -8,4 +8,8 @@ import lombok.*;
 public class BaseResponse {
     private Integer status;
     private String message;
+    public BaseResponse(){
+        this.message  = ResponseMessageConstant.SUCCESS;
+        this.status = 200;
+    }
 }

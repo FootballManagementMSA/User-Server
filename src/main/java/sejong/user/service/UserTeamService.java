@@ -1,6 +1,7 @@
 package sejong.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import sejong.user.entity.User;
 import sejong.user.entity.UserTeam;
@@ -12,6 +13,7 @@ import sejong.user.service.res.UsersInfoInTeamResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserTeamService {
@@ -28,6 +30,8 @@ public class UserTeamService {
         List<UserTeam> allByTeamId = userTeamRepository.findAllByTeamId(teamId).stream()
                 .filter(userTeam -> userTeam.getAccept().booleanValue())
                 .collect(Collectors.toList());
+
+        log.info(Integer.toString(allByTeamId.size()));
         return SizeUserTeamDto.of(allByTeamId.size());
     }
 

@@ -10,4 +10,9 @@ public class DataResponse<T> extends BaseResponse {
         super(status, message);
         this.data = data;
     }
+
+    public DataResponse(T data) {
+        super();
+        this.data = data;
+    }
 }
