@@ -43,4 +43,12 @@ public class UserAuthDto {
         private Integer age;
         private Integer height;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class UserLoginResponse {
+        private String accessToken;
+        private String refreshToken;
+    }
 }
