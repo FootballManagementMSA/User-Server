@@ -3,6 +3,7 @@ package sejong.user.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sejong.user.global.res.BaseResponse;
+import sejong.user.global.res.DataResponse;
 import sejong.user.service.dto.UserAuthDto;
 import sejong.user.service.UserAuthService;
 
@@ -19,10 +20,10 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody UserAuthDto.UserAuthRequest userAuthLoginRequest) {
-        userAuthService.userLogin(userAuthLoginRequest);
+    public ResponseEntity<DataResponse> login(@RequestBody UserAuthDto.UserAuthRequest userAuthLoginRequest) {
+        UserAuthDto.UserLoginResponse userLoginResponse = userAuthService.userLogin(userAuthLoginRequest);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, userLoginResponse));
     }
 
     @PostMapping("/register")
