@@ -7,7 +7,6 @@ import lombok.Setter;
 public class UserAuthDto {
 
     @Getter
-    @Setter
     @Builder
     public static class UserAuthRequest {
         private String id;
@@ -15,7 +14,7 @@ public class UserAuthDto {
     }
 
     @Getter
-    @Setter
+    @Builder
     public static class UserRegisterRequest{
         private String studentId;
         private String password;
@@ -27,7 +26,6 @@ public class UserAuthDto {
     }
 
     @Getter
-    @Setter
     @Builder
     public static class UserDto{
         private String studentId;
@@ -42,5 +40,12 @@ public class UserAuthDto {
         private String sex;
         private Integer age;
         private Integer height;
+    }
+
+    @Getter
+    @Builder
+    public static class UserLoginResponse {
+        private String accessToken;
+        private String refreshToken;
     }
 }
