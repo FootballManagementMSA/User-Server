@@ -11,4 +11,5 @@ public class ApplyUsersInfoResponseDto {
     private String position;
     private Integer age;
     private Integer teamCnt;
+    private String introduce;
 }

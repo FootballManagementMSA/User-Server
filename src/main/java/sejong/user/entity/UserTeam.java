@@ -23,4 +23,5 @@ public class UserTeam extends BaseTimeEntity {
     private Boolean accept;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String introduce;
 }

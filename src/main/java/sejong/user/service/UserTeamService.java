@@ -51,14 +51,16 @@ public class UserTeamService {
 
     public List<ApplyUsersInfoResponseDto> applyMember(Long teamId) {
         List<UserTeam> applyMembers = userTeamRepository.findApplyMembersInTeamByTeamId(teamId);
-        List<User> users = applyMembers.stream().map(UserTeam::getUser).collect(Collectors.toList());
-        return users.stream().map(user ->
-                ApplyUsersInfoResponseDto.builder()
-                        .userId(user.getId())
-                        .age(user.getAge())
-                        .teamCnt(users.size())
-                        .userName(user.getName())
-                        .position(user.getPosition())
-                        .build()).collect(Collectors.toList());
+        return applyMembers.stream().map(userTeam -> {
+            User user = userTeam.getUser();
+            return ApplyUsersInfoResponseDto.builder()
+                    .userId(user.getId())
+                    .age(user.getAge())
+                    .teamCnt(applyMembers.size())
+                    .introduce(userTeam.getIntroduce())
+                    .userName(user.getName())
+                    .position(user.getPosition())
+                    .build();
+        }).collect(Collectors.toList());
     }
 }
