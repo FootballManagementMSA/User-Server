@@ -8,6 +8,7 @@ import sejong.user.entity.UserTeam;
 import sejong.user.repository.UserRepository;
 import sejong.user.repository.UserTeamRepository;
 import sejong.user.service.dto.SizeUserTeamDto;
+import sejong.user.service.res.ApplyUsersInfoResponseDto;
 import sejong.user.service.res.UsersInfoInTeamResponseDto;
 
 import java.util.List;
@@ -37,16 +38,27 @@ public class UserTeamService {
 
     public List<UsersInfoInTeamResponseDto> findMembersInfoInTeam(Long teamId) {
         List<UserTeam> membersInTeam = userTeamRepository.findMembersInTeamByTeamId(teamId);
-
-        List<Long> membersId = membersInTeam.stream().map(UserTeam::getUserId).collect(Collectors.toList());
-        List<User> usersIn = userRepository.findUsersIn(membersId);
-        return usersIn.stream().map(user ->
+        List<User> users = membersInTeam.stream().map(UserTeam::getUser).collect(Collectors.toList());
+        return users.stream().map(user ->
                 UsersInfoInTeamResponseDto.builder()
-                        .teamCnt(userTeamRepository.findTeamsInUserByUserId(user.getId()).size())
+                        .teamCnt(users.size())
                         .userName(user.getName())
                         .userId(user.getId())
                         .position(user.getPosition())
                         .age(user.getAge())
+                        .build()).collect(Collectors.toList());
+    }
+
+    public List<ApplyUsersInfoResponseDto> applyMember(Long teamId) {
+        List<UserTeam> applyMembers = userTeamRepository.findApplyMembersInTeamByTeamId(teamId);
+        List<User> users = applyMembers.stream().map(UserTeam::getUser).collect(Collectors.toList());
+        return users.stream().map(user ->
+                ApplyUsersInfoResponseDto.builder()
+                        .userId(user.getId())
+                        .age(user.getAge())
+                        .teamCnt(users.size())
+                        .userName(user.getName())
+                        .position(user.getPosition())
                         .build()).collect(Collectors.toList());
     }
 }

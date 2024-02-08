@@ -17,7 +17,9 @@ public class UserTeam extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long teamId;
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
     private Boolean accept;
     @Enumerated(EnumType.STRING)
     private Role role;
