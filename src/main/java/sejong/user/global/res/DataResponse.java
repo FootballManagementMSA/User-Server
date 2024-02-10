@@ -15,4 +15,7 @@ public class DataResponse<T> extends BaseResponse {
         super();
         this.data = data;
     }
+    public DataResponse() {
+        super();
+    }
 }

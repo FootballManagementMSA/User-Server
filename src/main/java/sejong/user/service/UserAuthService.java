@@ -28,14 +28,16 @@ public class UserAuthService {
     private final RestTemplate restTemplate;
     private final PasswordEncoder passwordEncoder;
 
-    public UserAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final TokenService tokenService;
+
+    public UserAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
         this.userRepository = userRepository;
         this.restTemplate = new RestTemplate();
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
-    // TODO: 로그인 기능 구현
-    public void userLogin(UserAuthDto.UserAuthRequest userAuthRequest) {
+    public UserAuthDto.UserLoginResponse userLogin(UserAuthDto.UserAuthRequest userAuthRequest) {
         ResponseEntity<String> response = getUserAuthData(userAuthRequest);
         String responseBody = response.getBody();
 
@@ -45,6 +47,15 @@ public class UserAuthService {
         // 예외처리
         validateAuthSejongStudent(resultCode);
         validateRegisterUser(resultCode, userAuthRequest.getId());
+        validateLoginUser(userAuthRequest.getId(), userAuthRequest.getPw());
+
+        String accessToken = tokenService.createAccessToken(userAuthRequest.getId());
+        String refreshToken = tokenService.createRefreshToken(userAuthRequest.getId());
+
+        return UserAuthDto.UserLoginResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public void registerUser(UserAuthDto.UserRegisterRequest userRegisterRequest) {
@@ -108,6 +119,14 @@ public class UserAuthService {
         Optional<User> findUser = userRepository.findByStudentId(studentId);
         if (findUser.isPresent())
             throw new BadRequestException(BAD_REQUEST_STATUS_CODE, ALREADY_REGISTERED_USER);
+    }
+
+    private void validateLoginUser(String studentId, String password){
+        Optional<User> findUser = userRepository.findByStudentId(studentId);
+
+        if(!passwordEncoder.matches(password, findUser.get().getPassword())){
+            throw new BadRequestException(BAD_REQUEST_STATUS_CODE, ID_PASSWORD_MISMATCH_EXCEPTION_MESSAGE);
+        }
     }
 
     private UserAuthDto.UserDto extractStudentInfo(JSONObject jsonObject, UserAuthDto.UserRegisterRequest userRegisterRequest) {
