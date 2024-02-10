@@ -20,20 +20,21 @@ import java.util.List;
 @RequestMapping("/api/user-service")
 public class UserTeamController {
     private final UserTeamService userTeamService;
+
     @GetMapping("/users/teams/{teamId}/size")
-    public ResponseEntity<SizeUserTeamResponse> countUsersInTeam(@PathVariable Long teamId){
+    public ResponseEntity<SizeUserTeamResponse> countUsersInTeam(@PathVariable Long teamId) {
         SizeUserTeamDto dto = userTeamService.countUserTeam(teamId);
         return ResponseEntity.ok().body(SizeUserTeamResponse.of(dto.getSize()));
     }
 
     @GetMapping("/users/teams/{teamId}")
-    public DataResponse<List<UsersInfoInTeamResponseDto>> UsersInTeam(@PathVariable Long teamId){
+    public DataResponse<List<UsersInfoInTeamResponseDto>> UsersInTeam(@PathVariable Long teamId) {
         return new DataResponse(userTeamService.findMembersInfoInTeam(teamId));
     }
 
     @GetMapping("/users/teams/{teamId}/apply")
-    public DataResponse<List<ApplyUsersInfoResponseDto>>applyUsersInTeam(@PathVariable Long teamId){
-        return new DataResponse<>(userTeamService.applyMember(teamId));
+    public DataResponse<List<ApplyUsersInfoResponseDto>> applyUsersInTeam(@PathVariable Long teamId) {
+        return new DataResponse(userTeamService.findApplyMember(teamId));
     }
 
 }

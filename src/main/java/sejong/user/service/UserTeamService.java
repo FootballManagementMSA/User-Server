@@ -2,17 +2,24 @@ package sejong.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import sejong.user.entity.Role;
 import sejong.user.entity.User;
 import sejong.user.entity.UserTeam;
 import sejong.user.repository.UserRepository;
 import sejong.user.repository.UserTeamRepository;
 import sejong.user.service.dto.SizeUserTeamDto;
+import sejong.user.service.req.ApplyUserInfoRequestDto;
 import sejong.user.service.res.ApplyUsersInfoResponseDto;
 import sejong.user.service.res.UsersInfoInTeamResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static sejong.user.entity.Role.MEMBER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +56,7 @@ public class UserTeamService {
                         .build()).collect(Collectors.toList());
     }
 
-    public List<ApplyUsersInfoResponseDto> applyMember(Long teamId) {
+    public List<ApplyUsersInfoResponseDto> findApplyMember(Long teamId) {
         List<UserTeam> applyMembers = userTeamRepository.findApplyMembersInTeamByTeamId(teamId);
         return applyMembers.stream().map(userTeam -> {
             User user = userTeam.getUser();
@@ -62,5 +69,28 @@ public class UserTeamService {
                     .position(user.getPosition())
                     .build();
         }).collect(Collectors.toList());
+    }
+
+
+    @KafkaListener(topics = "team")
+    public void applyMember(ApplyUserInfoRequestDto userInfoRequestDto) {
+        // 특정 team에 userId가 속한지 확인
+        Optional<UserTeam> userTeam =
+                userTeamRepository.findByUserIdAndTeamId(userInfoRequestDto.getUserId(), userInfoRequestDto.getTeamId());
+        // 있으면 예외
+        if(userTeam.isPresent()){
+            throw new IllegalStateException("이미 가입신청중인데 뭘 또 신청해 에러에러");
+        }
+        User user = userRepository.findById(userInfoRequestDto.getUserId()).orElseThrow(NullPointerException::new);
+
+        UserTeam userTeam1 = UserTeam.builder()
+                .accept(false)
+                .teamId(userInfoRequestDto.getTeamId())
+                .role(MEMBER)
+                .user(user)
+                .introduce(userInfoRequestDto.getIntroduce())
+                .build();
+        // 없으면 등록
+        userTeamRepository.save(userTeam1);
     }
 }

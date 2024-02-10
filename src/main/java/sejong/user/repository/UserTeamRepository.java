@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import sejong.user.entity.UserTeam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
@@ -16,6 +17,8 @@ public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
     List<UserTeam> findMembersInTeamByTeamId(@Param("teamId") Long teamId);
     @Query("select ut from user_team_tb as ut join fetch ut.user where ut.accept=false and ut.teamId=:teamId")
     List<UserTeam> findApplyMembersInTeamByTeamId(@Param("teamId") Long teamId);
+
+    Optional<UserTeam> findByUserIdAndTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
     UserTeam save(UserTeam userTeam);
 }
