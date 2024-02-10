@@ -24,4 +24,7 @@ public class UserTeam extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String introduce;
+    public void approve(){
+        this.accept = true;
+    }
 }

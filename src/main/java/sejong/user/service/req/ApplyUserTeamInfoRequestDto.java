@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplyUserInfoRequestDto {
+public class ApplyUserTeamInfoRequestDto {
     private Long teamId;
     private Long userId;
     private String introduce;
