@@ -2,9 +2,9 @@ name: user-server CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
@@ -21,9 +21,10 @@ jobs:
 
     - name: Set YML
       run: |
-        mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
-        find src
+          mkdir ./src/main/resources 
+          cd ./src/main/resources # resources 폴더로 이동
+          touch ./application.yml # application.yml 생성
+          echo "${{ secrets.APPLICATION }}" > ./application.yml # github actions에서 설정한 값을 application.yml 파일에 쓰기
 
     - name: Set YML LOCAL
       run: |
