@@ -17,8 +17,17 @@ public class UserTeam extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long teamId;
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+    /**
+     * 신청중이면 false, 신청승인됬으면 true, 신청거부면 삭제
+     */
     private Boolean accept;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String introduce;
+    public void approve(){
+        this.accept = true;
+    }
 }

@@ -73,6 +73,9 @@ dependencies {
     // DatatypeConverter
     implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
+
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 dependencyManagement {
