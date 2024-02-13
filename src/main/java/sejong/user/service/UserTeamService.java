@@ -2,16 +2,16 @@ package sejong.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import sejong.user.entity.Role;
+import org.springframework.transaction.annotation.Transactional;
 import sejong.user.entity.User;
 import sejong.user.entity.UserTeam;
 import sejong.user.repository.UserRepository;
 import sejong.user.repository.UserTeamRepository;
 import sejong.user.service.dto.SizeUserTeamDto;
-import sejong.user.service.req.ApplyUserInfoRequestDto;
+import sejong.user.service.req.ApplyUserTeamInfoRequestDto;
+import sejong.user.service.req.ConfirmApplicationRequestDto;
 import sejong.user.service.res.ApplyUsersInfoResponseDto;
 import sejong.user.service.res.UsersInfoInTeamResponseDto;
 
@@ -72,8 +72,8 @@ public class UserTeamService {
     }
 
 
-    @KafkaListener(topics = "team")
-    public void applyMember(ApplyUserInfoRequestDto userInfoRequestDto) {
+    @KafkaListener(topics = "team",groupId = "group_1")
+    public void applyMember(ApplyUserTeamInfoRequestDto userInfoRequestDto) {
         // 특정 team에 userId가 속한지 확인
         Optional<UserTeam> userTeam =
                 userTeamRepository.findByUserIdAndTeamId(userInfoRequestDto.getUserId(), userInfoRequestDto.getTeamId());
@@ -92,5 +92,20 @@ public class UserTeamService {
                 .build();
         // 없으면 등록
         userTeamRepository.save(userTeam1);
+    }
+
+    @Transactional
+    @KafkaListener(topics = "team_confirm",groupId = "group_1")
+    public void confirmApplicant(ConfirmApplicationRequestDto requestDto) {
+        // 특정 team에 userId가 속한지 확인
+        UserTeam userTeam =
+                userTeamRepository.findByUserIdAndTeamId(requestDto.getUserId(), requestDto.getTeamId()).orElseThrow(NullPointerException::new);
+        if(userTeam.getAccept()){
+            throw new IllegalStateException("이미 가입된사람을 가입취소요청이 왜와");
+        }
+        if(!requestDto.isApprove()){
+            userTeamRepository.delete(userTeam);
+        }
+        userTeam.approve();
     }
 }
