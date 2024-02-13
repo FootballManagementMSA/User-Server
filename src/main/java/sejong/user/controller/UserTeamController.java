@@ -27,14 +27,19 @@ public class UserTeamController {
         return ResponseEntity.ok().body(SizeUserTeamResponse.of(dto.getSize()));
     }
 
+    /**
+     * 팀에 속한 사용자 리스트 조회 -> 수정해야함
+     * @param teamId
+     * @return
+     */
     @GetMapping("/users/teams/{teamId}")
     public DataResponse<List<UsersInfoInTeamResponseDto>> UsersInTeam(@PathVariable Long teamId) {
         return new DataResponse(userTeamService.findMembersInfoInTeam(teamId));
     }
 
     @GetMapping("/users/teams/{teamId}/apply")
-    public DataResponse<List<ApplyUsersInfoResponseDto>> applyUsersInTeam(@PathVariable Long teamId) {
-        return new DataResponse(userTeamService.findApplyMember(teamId));
+    public DataResponse<List<ApplyUsersInfoResponseDto>> applicantInTeam(@PathVariable Long teamId) {
+        return new DataResponse(userTeamService.findApplicantInTeam(teamId));
     }
 
 }

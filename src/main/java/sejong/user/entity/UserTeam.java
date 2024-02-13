@@ -20,6 +20,9 @@ public class UserTeam extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+    /**
+     * 신청중이면 false, 신청승인됬으면 true, 신청거부면 삭제
+     */
     private Boolean accept;
     @Enumerated(EnumType.STRING)
     private Role role;

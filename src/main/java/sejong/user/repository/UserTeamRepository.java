@@ -21,4 +21,7 @@ public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
     Optional<UserTeam> findByUserIdAndTeamId(@Param("userId") Long userId, @Param("teamId") Long teamId);
 
     UserTeam save(UserTeam userTeam);
+
+    @Query("select ut from user_team_tb as ut where ut.user.id=:userId")
+    List<UserTeam> findByUserId(@Param(value = "userId") Long userId);
 }
