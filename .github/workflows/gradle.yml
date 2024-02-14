@@ -65,9 +65,13 @@ jobs:
       - name: Run Redis
         run: |
               sudo docker run -d --name redis --rm -p 6379:6379 bes99/redis
+
+      - name: Stop and Remove Docker Image
+        run: |
+          sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "bes99/user-server"
+          sudo docker pull bes99/user-server
+
       - name: Docker run
         run: |
-              sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "bes99/user-server"
-              sudo docker pull bes99/user-server
               sudo docker run -d --name user-server --rm -p 8080:8080 bes99/user-server
  
