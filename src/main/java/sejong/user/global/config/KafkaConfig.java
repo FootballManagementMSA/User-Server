@@ -18,11 +18,12 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-    @Value("${kafka.BOOTSTRAP_SERVERS_CONFIG}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVERS_CONFIG;
 
-    @Value("${kafka.GROUP_ID_CONFIG}")
+    @Value("${spring.kafka.consumer.group-id}")
     private String GROUP_ID_CONFIG;
+
     /*@Bean
     public ConsumerFactory<String, ApplyUserInfoRequestDto> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
