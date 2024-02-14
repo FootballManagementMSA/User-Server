@@ -58,20 +58,16 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
-      - name: Stop and Remove Redis Container
+      - name: Stop and Remove Redis Image
         run: |
-            sudo docker ps -q --filter "name=redis" | grep -q . && sudo docker stop redis && sudo docker rm redis
-            sudo docker rmi -f bes99/redis || true
-      - name: Pull and Run Redis Container
+              sudo docker ps -q --filter "name=redis" | grep -q . && sudo docker stop "redis" && sudo docker rmi -f "bes99/redis"
+              sudo docker pull bes99/redis
+      - name: Run Redis
         run: |
-            sudo docker pull bes99/redis
-            sudo docker run -d --name redis -p 6379:6379 bes99/redis
-      - name: Stop and Remove User-Server Container
+              sudo docker run -d --name redis --rm -p 6379:6379 bes99/redis
+      - name: Docker run
         run: |
-            sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop user-server && sudo docker rm user-server
-            sudo docker rmi -f bes99/user-server || true
-      - name: Pull and Run User-Server Container
-        run: |
-            sudo docker pull bes99/user-server
-            sudo docker run -d --name user-server -p 8080:8080 bes99/user-server
+              sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "bes99/user-server"
+              sudo docker pull bes99/user-server
+              sudo docker run -d --name user-server --rm -p 8080:8080 bes99/user-server
  
