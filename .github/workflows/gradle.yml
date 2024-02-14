@@ -58,12 +58,14 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
-      - name: Docker run
-        run: |
-              sudo docker ps -q --filter "name=redis" | grep -q . && sudo docker stop "redis" && sudo docker rmi -f "bes99/redis"
+      - name: Set Redis
+        run: |  
+              sudo docker ps -q --filter "name=bes99/redis" | grep -q . && sudo docker stop "bes99/redis" && sudo docker rmi -f "bes99/redis"
               sudo docker pull bes99/redis
               sudo docker run -d --name redis --rm -p 6379:6379 bes99/redis
-              sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "bes99/user-server"
+      - name: Docker run
+        run: |
+              sudo docker ps -q --filter "name=bes99/user-server" | grep -q . && sudo docker stop "bes99/user-server" && sudo docker rmi -f "bes99/user-server"
               sudo docker pull bes99/user-server
               sudo docker run -d --name user-server --rm -p 8080:8080 bes99/user-server
  
