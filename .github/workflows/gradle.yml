@@ -2,9 +2,9 @@ name: user-server CI/CD
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ feature/fix-action-script ]
   pull_request:
-    branches: [ dev ]
+    branches: [ feature/fix-action-script ]
   workflow_dispatch:
 
 jobs:
@@ -22,22 +22,15 @@ jobs:
 
     - name: Set YML
       run: |
-          mkdir ./src/main/resources 
-          cd ./src/main/resources # resources 폴더로 이동
-          touch ./application.yml # application.yml 생성
-          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml # github actions에서 설정한 값을 application.yml 파일에 쓰기
-
-    - name: Set YML LOCAL
-      run: |
         mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_LOCAL_YML }}" | base64 --decode > src/main/resources/application-local.yml
-        find src
+        echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+      shell: bash
 
     - name: Set YML PRODUCTION
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.APPLICATION_PRODUCTION_YML }}" | base64 --decode > src/main/resources/application-production.yml
-        find src
+      shell: bash
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
