@@ -2,9 +2,9 @@ name: user-server CI/CD
 
 on:
   push:
-    branches: [ feature/fix-action-script ]
+    branches: [ dev ]
   pull_request:
-    branches: [ feature/fix-action-script ]
+    branches: [ dev ]
   workflow_dispatch:
 
 jobs:
