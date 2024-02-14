@@ -70,3 +70,4 @@ jobs:
               sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi  "bes99/user-server"
               sudo docker pull bes99/user-server
               sudo docker run -d --name user-server --rm -p 8080:8080 bes99/user-server
+ 
