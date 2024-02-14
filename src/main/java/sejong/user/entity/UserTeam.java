@@ -18,7 +18,7 @@ public class UserTeam extends BaseTimeEntity {
     private Long id;
     private Long teamId;
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "id")
     private User user;
     /**
      * 신청중이면 false, 신청승인됬으면 true, 신청거부면 삭제
