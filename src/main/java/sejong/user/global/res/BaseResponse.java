@@ -1,6 +1,7 @@
 package sejong.user.global.res;
 
 import lombok.*;
+import sejong.user.global.res.constant.ResponseMessageConstant;
 
 @Data
 @AllArgsConstructor
