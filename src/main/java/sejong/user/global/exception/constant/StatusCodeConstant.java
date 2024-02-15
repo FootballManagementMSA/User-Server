@@ -1,4 +1,4 @@
-package sejong.user.global.res;
+package sejong.user.global.exception.constant;
 
 public class StatusCodeConstant {
     public static final Integer OK_STATUS_CODE = 200;

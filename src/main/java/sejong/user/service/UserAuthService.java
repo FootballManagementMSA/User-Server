@@ -16,8 +16,8 @@ import sejong.user.repository.UserRepository;
 import java.util.Optional;
 
 import static sejong.user.global.exception.constant.ExceptionMessageConstant.*;
-import static sejong.user.global.res.StatusCodeConstant.BAD_REQUEST_STATUS_CODE;
-import static sejong.user.global.res.StatusCodeConstant.NOT_FOUND_STATUS_CODE;
+import static sejong.user.global.exception.constant.StatusCodeConstant.BAD_REQUEST_STATUS_CODE;
+import static sejong.user.global.exception.constant.StatusCodeConstant.NOT_FOUND_STATUS_CODE;
 import static sejong.user.service.constant.UserAuthServiceConstant.*;
 
 @Service
