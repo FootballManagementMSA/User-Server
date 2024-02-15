@@ -11,7 +11,7 @@ import sejong.user.service.TokenService;
 import sejong.user.service.UserService;
 import sejong.user.service.dto.UserDto;
 
-import static sejong.user.global.exception.constant.StatusCodeConstant.OK_STATUS_CODE;
+import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
 import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
 
 @RestController

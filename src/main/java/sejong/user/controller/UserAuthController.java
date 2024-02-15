@@ -9,7 +9,7 @@ import sejong.user.service.dto.UserAuthDto;
 import sejong.user.service.UserAuthService;
 
 import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
-import static sejong.user.global.exception.constant.StatusCodeConstant.OK_STATUS_CODE;
+import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
 
 @RestController
 @RequestMapping("/api/user-service")
