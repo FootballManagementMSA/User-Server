@@ -1,7 +1,9 @@
 package sejong.user.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,7 +31,7 @@ public class TokenService {
         this.redisTemplate = redisTemplate;
     }
 
-    public String createAccessToken(String studentId){
+    public String createAccessToken(String studentId) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + accessTokenExpiration);
 
@@ -42,7 +44,7 @@ public class TokenService {
     }
 
 
-    public String createRefreshToken(String studentId){
+    public String createRefreshToken(String studentId) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshTokenExpiration);
 
@@ -63,4 +65,25 @@ public class TokenService {
 
         return refreshToken;
     }
+
+    public String getStudentIdFromToken(String token) {
+        if (token != null && !token.isEmpty()) {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        }
+        return null;
+    }
+
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
 }
