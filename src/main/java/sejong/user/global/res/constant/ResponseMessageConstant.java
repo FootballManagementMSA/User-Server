@@ -1,4 +1,4 @@
-package sejong.user.global.res;
+package sejong.user.global.res.constant;
 
 public class ResponseMessageConstant {
     public static final String SUCCESS = "SUCCESS";
