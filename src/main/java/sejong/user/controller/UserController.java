@@ -16,14 +16,16 @@ import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user-service")
+@RequestMapping("/api/user-service/users")
 public class UserController {
     private final TokenService tokenService;
     private final UserService userService;
 
     @GetMapping()
-    public ResponseEntity<DataResponse> getMyPage(HttpServletRequest http){
-        UserDto.MyPageResponse response = userService.getMyPage(tokenService.getStudentIdFromToken(http));
+    public ResponseEntity<DataResponse> getMyPage(HttpServletRequest http) {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+        UserDto.MyPageResponse response = userService.getMyPage(studentId);
 
         return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, response));
     }

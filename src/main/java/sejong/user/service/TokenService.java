@@ -66,9 +66,7 @@ public class TokenService {
         return refreshToken;
     }
 
-    public String getStudentIdFromToken(HttpServletRequest request) {
-        String token = getTokenFromRequest(request);
-
+    public String getStudentIdFromToken(String token) {
         if (token != null && !token.isEmpty()) {
             Claims claims = Jwts.parser()
                     .setSigningKey(jwtSecret)
@@ -77,18 +75,15 @@ public class TokenService {
 
             return claims.getSubject();
         }
-
         return null;
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-
+    public String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
+
 }

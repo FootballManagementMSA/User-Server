@@ -1,7 +1,6 @@
 package sejong.user.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import sejong.user.entity.User;
 import sejong.user.global.exception.NotFoundException;
@@ -13,7 +12,6 @@ import static sejong.user.global.res.constant.StatusCodeConstant.NOT_FOUND_STATU
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 
