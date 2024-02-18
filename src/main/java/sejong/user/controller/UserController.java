@@ -3,13 +3,14 @@ package sejong.user.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sejong.user.global.res.BaseResponse;
 import sejong.user.global.res.DataResponse;
 import sejong.user.service.TokenService;
 import sejong.user.service.UserService;
 import sejong.user.service.dto.UserDto;
+
+import java.io.IOException;
 
 import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
 import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
@@ -28,5 +29,16 @@ public class UserController {
         UserDto.MyPageResponse response = userService.getMyPage(studentId);
 
         return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, response));
+    }
+
+    @PutMapping()
+    public ResponseEntity<BaseResponse> modifyUser(HttpServletRequest http,
+                                                    @ModelAttribute UserDto.ModifyUserRequest modifyUserDto) throws IOException {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+
+        userService.modifyUser(studentId, modifyUserDto);
+
+        return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
     }
 }
