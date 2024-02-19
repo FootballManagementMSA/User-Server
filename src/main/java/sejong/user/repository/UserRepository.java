@@ -17,15 +17,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteAll();
 
     Optional<User> findByStudentId(String studentId);
-
-    @Modifying
-    @Query("UPDATE user_tb u SET u.name = :name, u.age = :age, u.height = :height, u.sex = :sex, u.position = :position, u.foot = :foot, u.image = :image WHERE u.studentId = :studentId")
-    void modifyUser(@Param("name") String name,
-                   @Param("age") Integer age,
-                   @Param("height") Integer height,
-                   @Param("sex") String sex,
-                   @Param("position") String position,
-                   @Param("foot") String foot,
-                   @Param("image") String image,
-                   @Param("studentId") String studentId);
 }

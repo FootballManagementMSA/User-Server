@@ -37,16 +37,7 @@ public class UserService {
             imageURL = s3Service.uploadMultipartFile(modifyUserDto.getImage());
         }
 
-        userRepository.modifyUser(
-                modifyUserDto.getName(),
-                modifyUserDto.getAge(),
-                modifyUserDto.getHeight(),
-                modifyUserDto.getSex(),
-                modifyUserDto.getPosition(),
-                modifyUserDto.getFoot(),
-                imageURL,
-                user.getStudentId()
-        );
+        user.updateUser(modifyUserDto, imageURL);
     }
 
     private UserDto.MyPageResponse changeUserToMyPageResponse(User user) {
