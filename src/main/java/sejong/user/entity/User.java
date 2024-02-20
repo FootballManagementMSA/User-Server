@@ -3,6 +3,7 @@ package sejong.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import sejong.user.service.dto.UserDto;
 
 @Builder
 @Getter
@@ -29,4 +30,14 @@ public class User {
     private String image;
     private Integer game;
     private Integer goal;
+
+    public void updateUser(UserDto.ModifyUserRequest modifyUserDto, String image) {
+        this.name = modifyUserDto.getName();
+        this.age = modifyUserDto.getAge();
+        this.height = modifyUserDto.getHeight();
+        this.sex = modifyUserDto.getSex();
+        this.position = modifyUserDto.getPosition();
+        this.foot = modifyUserDto.getFoot();
+        this.image = image;
+    }
 }
