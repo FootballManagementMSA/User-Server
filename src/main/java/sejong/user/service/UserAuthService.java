@@ -1,7 +1,9 @@
 package sejong.user.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import sejong.user.global.exception.NotFoundException;
 import sejong.user.service.dto.UserAuthDto;
 import sejong.user.repository.UserRepository;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static sejong.user.global.exception.constant.ExceptionMessageConstant.*;
@@ -22,35 +25,33 @@ import static sejong.user.service.constant.UserAuthServiceConstant.*;
 
 @Service
 @Transactional
-@Slf4j
 public class UserAuthService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final PasswordEncoder passwordEncoder;
 
     private final TokenService tokenService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public UserAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+    public UserAuthService(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           TokenService tokenService,
+                           RedisTemplate<String, Object> redisTemplate) {
         this.userRepository = userRepository;
         this.restTemplate = new RestTemplate();
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.redisTemplate = redisTemplate;
     }
 
     public UserAuthDto.UserLoginResponse userLogin(UserAuthDto.UserAuthRequest userAuthRequest) {
-        ResponseEntity<String> response = getUserAuthData(userAuthRequest);
-        String responseBody = response.getBody();
-
-        JSONObject jsonObject = new JSONObject(responseBody);
-        String resultCode = jsonObject.getJSONObject(RESULT).getString(CODE);
-
-        // 예외처리
-        validateAuthSejongStudent(resultCode);
-        validateRegisterUser(resultCode, userAuthRequest.getId());
+        validateRegisterUser(userAuthRequest.getId());
         validateLoginUser(userAuthRequest.getId(), userAuthRequest.getPw());
 
         String accessToken = tokenService.createAccessToken(userAuthRequest.getId());
         String refreshToken = tokenService.createRefreshToken(userAuthRequest.getId());
+
+        saveTokensInRedis(userAuthRequest.getId(), accessToken, refreshToken);
 
         return UserAuthDto.UserLoginResponse.builder()
                 .accessToken(accessToken)
@@ -108,11 +109,9 @@ public class UserAuthService {
             throw new NotFoundException(NOT_FOUND_STATUS_CODE, SEJONG_AUTH_FAIL_EXCEPTION_MESSAGE);
     }
 
-    private void validateRegisterUser(String resultCode, String studentId) {
-        if (resultCode.equals(SUCCESS)) {
-            userRepository.findByStudentId(studentId)
-                    .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
-        }
+    private void validateRegisterUser(String studentId) {
+        userRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
     }
 
     private void validateAlreadyRegisteredUser(String studentId) {
@@ -169,4 +168,15 @@ public class UserAuthService {
                 .status(userDto.getStatus())
                 .build();
     }
+
+    public void saveTokensInRedis(String userId, String accessToken, String refreshToken) {
+        // AccessToken 저장
+        String accessTokenKey = "accessToken:" + userId;
+        redisTemplate.opsForValue().set(accessTokenKey, accessToken, Duration.ofHours(2)); // 1시간 동안 유효
+
+        // RefreshToken 저장
+        String refreshTokenKey = "refreshToken:" + userId;
+        redisTemplate.opsForValue().set(refreshTokenKey, refreshToken, Duration.ofDays(3)); // 7일 동안 유효
+    }
+
 }
