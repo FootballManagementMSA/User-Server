@@ -1,8 +1,6 @@
 package sejong.user.service.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 public class UserAuthDto {
 
@@ -45,6 +43,21 @@ public class UserAuthDto {
     @Getter
     @Builder
     public static class UserLoginResponse {
+        private String accessToken;
+        private String refreshToken;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReissueTokenRequest {
+        private String refreshToken;
+    }
+
+    @Getter
+    @Builder
+    public static class ReissueTokenResponse {
         private String accessToken;
         private String refreshToken;
     }

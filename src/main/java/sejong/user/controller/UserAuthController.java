@@ -30,4 +30,11 @@ public class UserAuthController {
 
         return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
     }
+
+    @PostMapping()
+    public ResponseEntity<DataResponse> reissueToken(@RequestBody UserAuthDto.ReissueTokenRequest reissueTokenRequest) {
+        UserAuthDto.ReissueTokenResponse reissueTokenResponse = userAuthService.reissueToken(reissueTokenRequest);
+
+        return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, reissueTokenResponse));
+    }
 }
