@@ -41,4 +41,14 @@ public class UserController {
 
         return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
     }
+
+    @PostMapping()
+    public ResponseEntity<BaseResponse> logout(HttpServletRequest http) {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+
+        userService.logout(studentId);
+
+        return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
+    }
 }
