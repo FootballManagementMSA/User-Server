@@ -13,4 +13,8 @@ public class UserAuthServiceConstant {
     public static final String MAJOR = "major";
     public static final String NAME = "name";
     public static final String STATUS = "status";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String REFRESH_TOKEN = "refreshToken";
+    public static final int ACCESS_TOKEN_DURATION_TIME = 2;
+    public static final int REFRESH_TOKEN_DURATION_TIME = 3;
 }

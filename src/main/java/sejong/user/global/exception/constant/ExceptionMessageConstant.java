@@ -5,4 +5,5 @@ public class ExceptionMessageConstant {
     public static final String NOT_REGISTER_USER_EXCEPTION_MESSAGE = "회원가입 되지 않은 학생입니다.";
     public static final String ALREADY_REGISTERED_USER = "이미 가입된 회원입니다.";
     public static final String ID_PASSWORD_MISMATCH_EXCEPTION_MESSAGE = "아이디 비밀번호가 일치하지 않습니다.";
+    public static final String AUTHORIZATION_EXCEPTION_MESSAGE = "존재하지 않거나 일치하지 않는 Token입니다.";
 }
