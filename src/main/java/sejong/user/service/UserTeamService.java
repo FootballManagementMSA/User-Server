@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static sejong.user.entity.Role.LEADER;
 import static sejong.user.entity.Role.MEMBER;
 
 @Slf4j
@@ -27,6 +28,7 @@ import static sejong.user.entity.Role.MEMBER;
 public class UserTeamService {
     private final UserTeamRepository userTeamRepository;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
     /**
      * 특정 팀에 소속된 사람의 수를 구해주는 메서드
@@ -121,5 +123,25 @@ public class UserTeamService {
             userTeamRepository.delete(userTeam);
         }
         userTeam.approve();
+    }
+
+    /**
+     * 토큰 검증은 gateway service에서 진행되기 때문에 검증된 토큰만 전달받는다.
+     * @param token
+     */
+    @Transactional
+    public void includeOwnerInTeam(Long teamId,String token){
+        String studentId = tokenService.getStudentIdFromToken(token);
+        User user = userRepository.findByStudentId(studentId).orElseThrow(NullPointerException::new);
+
+        UserTeam userTeam = UserTeam.builder()
+                .accept(true)
+                .teamId(teamId)
+                .role(LEADER)
+                .user(user)
+                .introduce("동아리장입니다.")
+                .build();
+
+        userTeamRepository.save(userTeam);
     }
 }
