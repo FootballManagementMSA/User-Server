@@ -51,4 +51,14 @@ public class UserController {
 
         return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
     }
+
+    @DeleteMapping()
+    public ResponseEntity<BaseResponse> deleteUser(HttpServletRequest http) {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+
+        userService.deleteUser(studentId);
+
+        return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
+    }
 }

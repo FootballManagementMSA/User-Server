@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import sejong.user.aws.S3Service;
+import sejong.user.common.client.TeamServiceClient;
 import sejong.user.entity.User;
 import sejong.user.global.exception.NotFoundException;
 import sejong.user.repository.UserRepository;
@@ -23,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final TeamServiceClient teamServiceClient;
 
     public UserDto.MyPageResponse getMyPage(String studentId) {
         User user = validateUser(studentId);
@@ -46,6 +48,13 @@ public class UserService {
     public void logout(String studentId) {
         validateUser(studentId);
         deleteExistingTokens(studentId);
+    }
+
+    @Transactional
+    public void deleteUser(String studentId) {
+        User user = validateUser(studentId);
+        userRepository.delete(user);
+        teamServiceClient.deleteUserSquad(user.getId());
     }
 
     // -->
