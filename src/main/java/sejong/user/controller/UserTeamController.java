@@ -2,10 +2,8 @@ package sejong.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sejong.user.controller.res.IncludeOwnerInTeamDto;
 import sejong.user.controller.res.SizeUserTeamResponse;
 import sejong.user.global.res.DataResponse;
 import sejong.user.service.UserTeamService;
@@ -41,5 +39,12 @@ public class UserTeamController {
     public DataResponse<List<ApplyUsersInfoResponseDto>> applicantInTeam(@PathVariable Long teamId) {
         return new DataResponse(userTeamService.findApplicantInTeam(teamId));
     }
-
+    /**
+     * 팀 생성 시 생성자(동아리장)가 팀에 바로 포함되도록 호출하는 API
+     */
+    @PostMapping("/users/teams/")
+    public DataResponse includeOwnerInTeam(@RequestBody IncludeOwnerInTeamDto includeOwnerInTeamDto){
+        userTeamService.includeOwnerInTeam(includeOwnerInTeamDto.getTeamId(),includeOwnerInTeamDto.getToken());
+        return new DataResponse<>();
+    }
 }
