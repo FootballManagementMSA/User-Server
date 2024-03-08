@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import sejong.user.aws.S3Service;
-import sejong.user.common.client.TeamServiceClient;
 import sejong.user.entity.User;
 import sejong.user.global.exception.NotFoundException;
 import sejong.user.repository.UserRepository;
 import sejong.user.service.dto.UserDto;
+import sejong.user.service.kafka.UserKafkaProducer;
 
 import java.io.IOException;
 
@@ -24,8 +24,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final TeamServiceClient teamServiceClient;
+    private final UserKafkaProducer userKafkaProducer;
 
+    // <--
     public UserDto.MyPageResponse getMyPage(String studentId) {
         User user = validateUser(studentId);
 
@@ -52,10 +53,13 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String studentId) {
-        User user = validateUser(studentId);
+        User user = userRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
         userRepository.delete(user);
-        teamServiceClient.deleteUserSquad(user.getId());
+        userKafkaProducer.deleteUser(user.getId());
     }
+    // <-- 호출 메서드
+
 
     // -->
     private User validateUser(String studentId) {

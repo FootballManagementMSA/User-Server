@@ -63,13 +63,13 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Void> deleteSquadProducerFactory() {
+    public ProducerFactory<String, Long> deleteUserProducerFactory() {
         return new DefaultKafkaProducerFactory<>(UserProducerConfig());
     }
 
     @Bean
-    public KafkaTemplate<String, Void> deleteSquadKafkaTemplate(){
-        return new KafkaTemplate<>(deleteSquadProducerFactory());
+    public KafkaTemplate<String, Long> deleteUserKafkaTemplate(){
+        return new KafkaTemplate<>(deleteUserProducerFactory());
     }
     // <-- Producer Config
 
