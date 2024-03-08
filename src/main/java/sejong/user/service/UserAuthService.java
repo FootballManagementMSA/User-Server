@@ -178,6 +178,8 @@ public class UserAuthService {
                 .major(userDto.getMajor())
                 .position(userDto.getPosition())
                 .status(userDto.getStatus())
+                .game(0)
+                .goal(0)
                 .build();
     }
 
