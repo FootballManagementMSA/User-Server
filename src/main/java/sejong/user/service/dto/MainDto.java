@@ -14,4 +14,5 @@ public class MainDto {
         private String position;
         private String foot;
     }
+
 }

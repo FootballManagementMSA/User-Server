@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sejong.user.common.client.dto.ScheduleInfoDto;
 import sejong.user.global.res.DataResponse;
 import sejong.user.service.MainService;
 import sejong.user.service.TokenService;
 import sejong.user.service.dto.MainDto;
+
+import java.util.List;
 
 import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
 import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
@@ -31,4 +34,15 @@ public class MainController {
 
         return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, studentInfoResponse));
     }
+
+    @GetMapping("/schedule")
+    public ResponseEntity<DataResponse> mainScheduleInfo(HttpServletRequest http) {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+
+        List<ScheduleInfoDto> scheduleInfo = mainService.scheduleInfo(studentId);
+
+        return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, scheduleInfo));
+    }
+
 }
