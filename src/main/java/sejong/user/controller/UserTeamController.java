@@ -8,6 +8,7 @@ import sejong.user.controller.res.SizeUserTeamResponse;
 import sejong.user.global.res.DataResponse;
 import sejong.user.service.UserTeamService;
 import sejong.user.service.dto.SizeUserTeamDto;
+import sejong.user.service.dto.UserTeamInfoDto;
 import sejong.user.service.res.ApplyUsersInfoResponseDto;
 import sejong.user.service.res.UsersInfoInTeamResponseDto;
 
@@ -46,5 +47,10 @@ public class UserTeamController {
     public DataResponse includeOwnerInTeam(@RequestBody IncludeOwnerInTeamDto includeOwnerInTeamDto){
         userTeamService.includeOwnerInTeam(includeOwnerInTeamDto.getTeamId(),includeOwnerInTeamDto.getToken());
         return new DataResponse<>();
+    }
+
+    @GetMapping("/users/{userId}/teams")
+    public ResponseEntity<List<UserTeamInfoDto>> findUserTeams(@PathVariable Long userId){
+        return ResponseEntity.ok(userTeamService.findUserTeams(userId));
     }
 }

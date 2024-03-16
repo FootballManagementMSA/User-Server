@@ -10,6 +10,7 @@ import sejong.user.entity.UserTeam;
 import sejong.user.repository.UserRepository;
 import sejong.user.repository.UserTeamRepository;
 import sejong.user.service.dto.SizeUserTeamDto;
+import sejong.user.service.dto.UserTeamInfoDto;
 import sejong.user.service.req.ApplyUserTeamInfoRequestDto;
 import sejong.user.service.req.ConfirmApplicationRequestDto;
 import sejong.user.service.res.ApplyUsersInfoResponseDto;
@@ -127,10 +128,11 @@ public class UserTeamService {
 
     /**
      * 토큰 검증은 gateway service에서 진행되기 때문에 검증된 토큰만 전달받는다.
+     *
      * @param token
      */
     @Transactional
-    public void includeOwnerInTeam(Long teamId,String token){
+    public void includeOwnerInTeam(Long teamId, String token) {
         String studentId = tokenService.getStudentIdFromToken(token);
         User user = userRepository.findByStudentId(studentId).orElseThrow(NullPointerException::new);
 
@@ -143,5 +145,17 @@ public class UserTeamService {
                 .build();
 
         userTeamRepository.save(userTeam);
+    }
+
+    public List<UserTeamInfoDto> findUserTeams(Long userId) {
+        List<UserTeam> userTeams = userTeamRepository.findByUserId(userId);
+        return userTeams.stream()
+                .filter(UserTeam::getAccept)
+                .map(userTeam -> UserTeamInfoDto.builder()
+                        .introduce(userTeam.getIntroduce())
+                        .teamId(userTeam.getTeamId())
+                        .role(userTeam.getRole().name())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
