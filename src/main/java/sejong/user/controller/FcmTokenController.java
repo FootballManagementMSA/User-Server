@@ -1,10 +1,7 @@
 package sejong.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sejong.user.global.res.DataResponse;
 import sejong.user.service.FcmTokenService;
 import sejong.user.service.dto.FcmTokenDto;
@@ -18,5 +15,9 @@ public class FcmTokenController {
     public DataResponse saveOrUpdateToken(@RequestBody FcmTokenDto fcmTokenDto) {
         fcmTokenService.saveOrUpdateToken(fcmTokenDto);
         return new DataResponse<>();
+    }
+    @GetMapping("/")
+    public String getFcmToken(@RequestParam Long teamId){
+        return fcmTokenService.getFcmToken(teamId);
     }
 }

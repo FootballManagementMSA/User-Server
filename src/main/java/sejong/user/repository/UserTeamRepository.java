@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import sejong.user.entity.Role;
 import sejong.user.entity.UserTeam;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface UserTeamRepository extends JpaRepository<UserTeam,Long> {
 
     @Query("select ut from user_team_tb as ut where ut.user.id=:userId")
     List<UserTeam> findByUserId(@Param(value = "userId") Long userId);
+
+    Optional<UserTeam> findFirstByTeamIdAndRole(Long teamId, Role role);
 }
