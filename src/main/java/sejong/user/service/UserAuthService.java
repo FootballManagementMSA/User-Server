@@ -34,7 +34,7 @@ public class UserAuthService {
 
     @Transactional
     public UserAuthDto.UserLoginResponse userLogin(UserAuthDto.UserAuthRequest userAuthRequest) {
-        validateLoginUser(userAuthRequest.getId(), userAuthRequest.getPw());
+        User user = validateLoginUser(userAuthRequest.getId(), userAuthRequest.getPw());
 
         String accessToken = tokenService.createAccessToken(userAuthRequest.getId());
         String refreshToken = tokenService.createRefreshToken(userAuthRequest.getId());
@@ -42,6 +42,7 @@ public class UserAuthService {
         saveTokensInRedis(userAuthRequest.getId(), accessToken, refreshToken);
 
         return UserAuthDto.UserLoginResponse.builder()
+                .userId(user.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -133,13 +134,15 @@ public class UserAuthService {
             throw new NotFoundException(NOT_FOUND_STATUS_CODE, SEJONG_AUTH_FAIL_EXCEPTION_MESSAGE);
     }
 
-    private void validateLoginUser(String studentId, String password) {
+    private User validateLoginUser(String studentId, String password) {
         User findUser = userRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
 
         if (!passwordEncoder.matches(password, findUser.getPassword())) {
             throw new BadRequestException(BAD_REQUEST_STATUS_CODE, ID_PASSWORD_MISMATCH_EXCEPTION_MESSAGE);
         }
+
+        return findUser;
     }
 
     private void validateAlreadyRegisteredUser(String studentId) {
