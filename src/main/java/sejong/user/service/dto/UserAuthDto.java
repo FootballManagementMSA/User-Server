@@ -43,6 +43,7 @@ public class UserAuthDto {
     @Getter
     @Builder
     public static class UserLoginResponse {
+        private Long userId;
         private String accessToken;
         private String refreshToken;
     }
