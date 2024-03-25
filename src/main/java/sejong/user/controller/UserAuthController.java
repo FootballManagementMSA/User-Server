@@ -8,6 +8,8 @@ import sejong.user.global.res.DataResponse;
 import sejong.user.service.dto.UserAuthDto;
 import sejong.user.service.UserAuthService;
 
+import java.io.IOException;
+
 import static sejong.user.global.res.constant.ResponseMessageConstant.SUCCESS;
 import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
 
@@ -25,7 +27,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<BaseResponse> registerUser(@RequestBody UserAuthDto.UserRegisterRequest userRegisterRequest){
+    public ResponseEntity<BaseResponse> registerUser(@ModelAttribute UserAuthDto.UserRegisterRequest userRegisterRequest) throws IOException {
         userAuthService.registerUser(userRegisterRequest);
 
         return ResponseEntity.ok().body(new BaseResponse(OK_STATUS_CODE, SUCCESS));
