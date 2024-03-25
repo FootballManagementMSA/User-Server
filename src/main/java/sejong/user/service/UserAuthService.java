@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONObject;
+import sejong.user.aws.S3Service;
 import sejong.user.entity.User;
 import sejong.user.global.exception.AuthorizationException;
 import sejong.user.global.exception.BadRequestException;
@@ -15,6 +16,7 @@ import sejong.user.global.exception.NotFoundException;
 import sejong.user.service.dto.UserAuthDto;
 import sejong.user.repository.UserRepository;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -31,6 +33,7 @@ public class UserAuthService {
 
     private final TokenService tokenService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final S3Service s3Service;
 
     @Transactional
     public UserAuthDto.UserLoginResponse userLogin(UserAuthDto.UserAuthRequest userAuthRequest) {
@@ -49,7 +52,7 @@ public class UserAuthService {
     }
 
     @Transactional
-    public void registerUser(UserAuthDto.UserRegisterRequest userRegisterRequest) {
+    public void registerUser(UserAuthDto.UserRegisterRequest userRegisterRequest) throws IOException {
         UserAuthDto.UserAuthRequest userAuthRequest
                 = convertToUserAuthRequest(userRegisterRequest.getStudentId(), userRegisterRequest.getPassword());
 
@@ -62,8 +65,11 @@ public class UserAuthService {
         validateAuthSejongStudent(resultCode);
         validateAlreadyRegisteredUser(userRegisterRequest.getStudentId());
 
+        String image = "";
+        if(userRegisterRequest.getImage() != null) image = s3Service.uploadMultipartFile(userRegisterRequest.getImage());
+
         UserAuthDto.UserDto userDto
-                = extractStudentInfo(jsonObject, userRegisterRequest);
+                = extractStudentInfo(jsonObject, userRegisterRequest, image);
 
         userRepository.save(convertToUser(userDto));
     }
@@ -109,7 +115,7 @@ public class UserAuthService {
         return requestBody;
     }
 
-    private UserAuthDto.UserDto extractStudentInfo(JSONObject jsonObject, UserAuthDto.UserRegisterRequest userRegisterRequest) {
+    private UserAuthDto.UserDto extractStudentInfo(JSONObject jsonObject, UserAuthDto.UserRegisterRequest userRegisterRequest, String image) {
         JSONObject body = jsonObject.getJSONObject(RESULT).getJSONObject(BODY);
 
         return UserAuthDto.UserDto.builder()
@@ -120,6 +126,7 @@ public class UserAuthService {
                 .foot(userRegisterRequest.getFoot())
                 .position(userRegisterRequest.getPosition())
                 .sex(userRegisterRequest.getSex())
+                .image(image)
                 .grade(body.getString(GRADE))
                 .major(body.getString(MAJOR))
                 .name(body.getString(NAME))
@@ -183,6 +190,7 @@ public class UserAuthService {
                 .status(userDto.getStatus())
                 .game(0)
                 .goal(0)
+                .image(userDto.getImage())
                 .build();
     }
 
