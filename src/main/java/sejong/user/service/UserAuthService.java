@@ -66,7 +66,7 @@ public class UserAuthService {
         validateAlreadyRegisteredUser(userRegisterRequest.getStudentId());
 
         String image = "";
-        if(!userRegisterRequest.getImage().isEmpty()) image = s3Service.uploadMultipartFile(userRegisterRequest.getImage());
+        if(userRegisterRequest.getImage() != null) image = s3Service.uploadMultipartFile(userRegisterRequest.getImage());
 
         UserAuthDto.UserDto userDto
                 = extractStudentInfo(jsonObject, userRegisterRequest, image);
