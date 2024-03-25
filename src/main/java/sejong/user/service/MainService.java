@@ -30,6 +30,8 @@ public class MainService {
                 .goal(user.getGoal())
                 .position(user.getPosition())
                 .foot(user.getFoot())
+                .image(user.getImage())
+                .age(user.getAge())
                 .build();
     }
 
