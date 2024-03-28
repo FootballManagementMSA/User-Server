@@ -1,5 +1,7 @@
 package sejong.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,14 @@ import static sejong.user.global.res.constant.StatusCodeConstant.OK_STATUS_CODE;
 @RestController
 @RequestMapping("/api/user-service")
 @RequiredArgsConstructor
+@Tag(name = "Main Home API", description = "메인 홈과 관련된 API 입니다.")
 public class MainController {
     private final TokenService tokenService;
     private final MainService mainService;
 
 
     @GetMapping("/student")
+    @Operation(summary = "Main Home", description = "Main Home 화면의 Student 정보")
     public ResponseEntity<DataResponse> mainStudentInfo(HttpServletRequest http) {
         String token = tokenService.getTokenFromRequest(http);
         String studentId = tokenService.getStudentIdFromToken(token);
@@ -36,6 +40,7 @@ public class MainController {
     }
 
     @GetMapping("/schedule")
+    @Operation(summary = "Main Home", description = "Main Home 화면의 Schedule 정보")
     public ResponseEntity<DataResponse> mainScheduleInfo(HttpServletRequest http) {
         String token = tokenService.getTokenFromRequest(http);
         String studentId = tokenService.getStudentIdFromToken(token);
@@ -43,6 +48,17 @@ public class MainController {
         List<ScheduleInfoDto> scheduleInfo = mainService.scheduleInfo(studentId);
 
         return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, scheduleInfo));
+    }
+
+    @GetMapping("/team")
+    @Operation(summary = "Team Info", description = "TEAM-SERVER의 TEAM 정보를 가져오는 API 입니다.")
+    public ResponseEntity<DataResponse> getRegisteredTeamList(HttpServletRequest http) {
+        String token = tokenService.getTokenFromRequest(http);
+        String studentId = tokenService.getStudentIdFromToken(token);
+
+        List<MainDto.RegisteredTeamInfoResponse> registeredTeamInfo = mainService.getRegisteredTeamInfo(studentId);
+
+        return ResponseEntity.ok().body(new DataResponse(OK_STATUS_CODE, SUCCESS, registeredTeamInfo));
     }
 
 }
