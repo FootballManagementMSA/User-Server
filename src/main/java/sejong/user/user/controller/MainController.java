@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sejong.user.feignClient.dto.ScheduleInfoDto;
+import sejong.user.team.feignClient.dto.ScheduleInfoDto;
 import sejong.user.global.response.DataResponse;
 import sejong.user.user.service.MainService;
 import sejong.user.token.service.TokenService;

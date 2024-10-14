@@ -2,8 +2,8 @@ package sejong.user.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sejong.user.feignClient.client.TeamServiceClient;
-import sejong.user.feignClient.dto.ScheduleInfoDto;
+import sejong.user.team.feignClient.TeamServiceClient;
+import sejong.user.team.feignClient.dto.ScheduleInfoDto;
 import sejong.user.user.entity.User;
 import sejong.user.team.entity.UserTeam;
 import sejong.user.global.exception.NotFoundException;
