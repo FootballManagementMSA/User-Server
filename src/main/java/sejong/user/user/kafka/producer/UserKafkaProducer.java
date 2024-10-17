@@ -12,5 +12,6 @@ public class UserKafkaProducer {
 
 	public void deleteUser(String studentId) {
 		deleteUserKafkaTemplate.send("user-delete", studentId);
+		System.out.println("Sent delete user message for studentId: " + studentId); // 로그 추가
 	}
 }
