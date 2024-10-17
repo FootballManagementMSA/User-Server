@@ -14,7 +14,6 @@ public class MainDto {
         private Integer goal;
         private String position;
         private String foot;
-        private String image;
         private Integer age;
     }
 
