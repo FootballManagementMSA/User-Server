@@ -25,13 +25,13 @@ public class KafkaProducerConfig {
 	}
 
 	@Bean
-	public ProducerFactory<String, String> deleteUserProducerFactory() {
+	public ProducerFactory<String, String> stringValueProducerFactory() {
 		return new DefaultKafkaProducerFactory<>(UserProducerConfig());
 	}
 
 	@Bean
-	public KafkaTemplate<String, String> deleteUserKafkaTemplate() {
-		return new KafkaTemplate<>(deleteUserProducerFactory());
+	public KafkaTemplate<String, String> stringValueKafkaTemplate() {
+		return new KafkaTemplate<>(stringValueProducerFactory());
 	}
 
 	@Bean

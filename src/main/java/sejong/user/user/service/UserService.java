@@ -2,6 +2,7 @@ package sejong.user.user.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +55,11 @@ public class UserService {
 
 		userKafkaProducer.deleteUser(studentId);
 		userRepository.delete(user);
+	}
+
+	@Transactional
+	@KafkaListener(topics = "user-delete-rollback", groupId = "group-01")
+	public void handleDeleteUserRollback(String message) {
+		System.out.println("Received rollback message: " + message);
 	}
 }
