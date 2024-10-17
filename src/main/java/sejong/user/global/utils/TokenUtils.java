@@ -1,4 +1,4 @@
-package sejong.user.token.service;
+package sejong.user.global.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
-public class TokenService {
+public class TokenUtils {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -27,7 +27,7 @@ public class TokenService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public TokenService(RedisTemplate<String, String> redisTemplate) {
+    public TokenUtils(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

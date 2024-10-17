@@ -1,7 +1,6 @@
 package sejong.user.user.dto;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 public class UserAuthDto {
 
@@ -22,7 +21,6 @@ public class UserAuthDto {
         private String sex;
         private Integer age;
         private Integer height;
-        private MultipartFile image;
     }
 
     @Getter
@@ -34,7 +32,6 @@ public class UserAuthDto {
         private String status;
         private String major;
         private String name;
-        private String image;
 
         private String position;
         private String foot;

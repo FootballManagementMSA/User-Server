@@ -1,4 +1,4 @@
-package sejong.user.config;
+package sejong.user.config.security;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

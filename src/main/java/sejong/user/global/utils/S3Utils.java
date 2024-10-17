@@ -1,4 +1,4 @@
-package sejong.user.global.service;
+package sejong.user.global.utils;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -13,11 +13,11 @@ import java.io.InputStream;
 import static java.util.UUID.randomUUID;
 
 @Service
-public class S3Service {
+public class S3Utils {
     private final AmazonS3 s3client;
     private final String bucketName;
 
-    public S3Service(@Value("${cloud.aws.s3.bucket}") String bucketName, AmazonS3 s3client) {
+    public S3Utils(@Value("${cloud.aws.s3.bucket}") String bucketName, AmazonS3 s3client) {
         this.bucketName = bucketName;
         this.s3client = s3client;
     }
