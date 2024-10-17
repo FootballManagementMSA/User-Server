@@ -1,89 +1,58 @@
 package sejong.user.user.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.stereotype.Service;
-import sejong.user.global.service.S3Service;
-import sejong.user.user.entity.User;
+import org.springframework.transaction.annotation.Transactional;
+
+import sejong.user.global.utils.S3Utils;
+import sejong.user.user.domain.UserDomain;
+import sejong.user.user.entity.UserEntity;
 import sejong.user.global.exception.NotFoundException;
 import sejong.user.user.repository.UserRepository;
-import sejong.user.user.dto.UserDto;
-import sejong.user.user.kafka.UserKafkaProducer;
+import sejong.user.user.kafka.producer.UserKafkaProducer;
 
 import java.io.IOException;
 
 import static sejong.user.global.exception.constant.ExceptionMessageConstant.NOT_REGISTER_USER_EXCEPTION_MESSAGE;
 import static sejong.user.global.response.constant.StatusCodeConstant.NOT_FOUND_STATUS_CODE;
-import static sejong.user.user.constant.UserAuthServiceConstant.ACCESS_TOKEN;
-import static sejong.user.user.constant.UserAuthServiceConstant.REFRESH_TOKEN;
+import static sejong.user.user.dto.UserDto.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
-    private final S3Service s3Service;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final UserKafkaProducer userKafkaProducer;
+	private final UserRepository userRepository;
+	private final S3Utils s3Utils;
+	private final UserKafkaProducer userKafkaProducer;
 
-    // <--
-    public UserDto.MyPageResponse getMyPage(String studentId) {
-        User user = validateUser(studentId);
+	private final UserDomain userDomain;
 
-        return changeUserToMyPageResponse(user);
-    }
+	@Transactional(readOnly = true)
+	public GetUserResponse getUser(String studentId) {
+		UserEntity user = userDomain.validateUser(studentId);
 
-    @Transactional
-    public void modifyUser(String studentId, UserDto.ModifyUserRequest modifyUserDto) throws IOException {
-        User user = validateUser(studentId);
+		return userDomain.changeUserToMyPageResponse(user);
+	}
 
-        String imageURL = null;
-        if (!modifyUserDto.getImage().equals(null)) {
-            imageURL = s3Service.uploadMultipartFile(modifyUserDto.getImage());
-        }
+	@Transactional
+	public void modifyUser(ModifyUserRequest modifyUserDto) throws IOException {
+		UserEntity user = userDomain.validateUser(modifyUserDto.getStudentId());
 
-        user.updateUser(modifyUserDto, imageURL);
-    }
+		user.updateUser(modifyUserDto);
+	}
 
-    @Transactional
-    public void logout(String studentId) {
-        validateUser(studentId);
-        deleteExistingTokens(studentId);
-    }
+	@Transactional
+	public void logout(String studentId) {
+		userDomain.validateUser(studentId);
+		userDomain.deleteExistingTokens(studentId);
+	}
 
-    @Transactional
-    public void deleteUser(String studentId) {
-        User user = userRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
-        userRepository.delete(user);
-        userKafkaProducer.deleteUser(user.getId());
-    }
-    // <-- 호출 메서드
+	@Transactional
+	public void deleteUser(String studentId) {
+		UserEntity user = userRepository.findByStudentId(studentId)
+			.orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
 
-
-    // -->
-    private User validateUser(String studentId) {
-        return userRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_STATUS_CODE, NOT_REGISTER_USER_EXCEPTION_MESSAGE));
-    }
-    // <-- 예외처리 관련 메서드
-
-    // -->
-    private void deleteExistingTokens(String studentId) {
-        String accessTokenKey = ACCESS_TOKEN + studentId;
-        String refreshTokenKey = REFRESH_TOKEN + studentId;
-        redisTemplate.delete(accessTokenKey);
-        redisTemplate.delete(refreshTokenKey);
-    }
-    // <-- Redis 관련 메서드
-
-    // -->
-    private UserDto.MyPageResponse changeUserToMyPageResponse(User user) {
-        return UserDto.MyPageResponse.builder()
-                .studentId(user.getStudentId())
-                .name(user.getName())
-                .image(user.getImage())
-                .build();
-    }
-    // <-- 클래스 변환 메서드
+		userKafkaProducer.deleteUser(studentId);
+		userRepository.delete(user);
+	}
 }
