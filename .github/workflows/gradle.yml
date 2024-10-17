@@ -46,8 +46,8 @@ jobs:
 
     - name: build and release to DockerHub 
       env:
-        NAME: bes99 # 계정 명
-        REPO: user-server # 레포 이름
+        NAME: ${{secrets.DOCKER_USERNAME}}
+        REPO: user-server
       run: |
         docker build -t $REPO .
         docker tag $REPO:latest $NAME/$REPO:latest
@@ -58,20 +58,9 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
-      - name: Stop and Remove Redis Image
-        run: |
-              sudo docker ps -q --filter "name=redis" | grep -q . && sudo docker stop "redis" && sudo docker rmi -f "bes99/redis"
-              sudo docker pull bes99/redis
-      - name: Run Redis
-        run: |
-              sudo docker run -d --name redis --rm -p 6379:6379 bes99/redis
-
       - name: Stop and Remove Docker Image
         run: |
-          sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "bes99/user-server"
-          sudo docker pull bes99/user-server
-
-      - name: Docker run
-        run: |
-              sudo docker run -d --name user-server --rm -p 8080:8080 bes99/user-server
+          sudo docker ps -q --filter "name=user-server" | grep -q . && sudo docker stop "user-server" && sudo docker rmi -f "${{secrets.DOCKER_USERNAME}}/user-server"
+          sudo docker pull ${{secrets.DOCKER_USERNAME}}/user-server
+          sudo docker run -d --name user-server --rm -p 8080:8080 ${{secrets.DOCKER_USERNAME}}/user-server
  
