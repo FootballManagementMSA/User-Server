@@ -2,7 +2,7 @@
 FROM openjdk:17-jdk
 
 #컨테이너 안에 jar 파일은 app.jar 될꺼임
-COPY build/libs/eureka-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/user-server-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
