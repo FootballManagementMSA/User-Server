@@ -1,7 +1,8 @@
-FROM openjdk:17
-ARG JAR_FILE=build/libs/*.jar
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Seoul
-COPY ${JAR_FILE} app.jar
+#실행하기 위한 환경만 필요하면 jre, 개발까지면 jdk
+FROM openjdk:17-jdk
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+#컨테이너 안에 jar 파일은 app.jar 될꺼임
+COPY build/libs/eureka-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
